@@ -1,3 +1,23 @@
+/*
+Copyright 2017 Google Inc.
+
+Licensed under the Apache License, Version 2.0 (the "License");
+you may not use this file except in compliance with the License.
+You may obtain a copy of the License at
+
+    http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+limitations under the License.
+*/
+
+'use strict';
+
+/* globals headtrackr */
+
 // This code is adapted from the headtrackr.js example:
 // github.com/auduno/headtrackr
 
@@ -7,7 +27,7 @@ var canvasOverlay = document.getElementById('overlay');
 
 var videoWidth = videoInput.offsetWidth;
 var videoHeight = videoInput.offsetHeight;
-window.onresize = function(){
+window.onresize = function() {
   videoWidth = videoInput.offsetWidth;
   videoHeight = videoInput.offsetHeight;
   canvasInput.width = videoWidth;
@@ -22,8 +42,9 @@ canvasOverlay.width = videoWidth;
 canvasOverlay.height = videoHeight;
 var overlayContext = canvasOverlay.getContext('2d');
 
-var dataDiv = document.getElementById("data");
-function log(message){
+var dataDiv = document.getElementById('data');
+
+function log(message) {
   dataDiv.innerHTML = message;
 }
 
@@ -49,33 +70,36 @@ function handleheadtrackrStatusEvent(event) {
   }
 }
 
-function handleFaceTrackingEvent(e){
+function handleFaceTrackingEvent() {
   overlayContext.clearRect(0, 0, videoWidth, videoHeight);
   // once we have stable tracking, draw rectangle
-  if (event.detection == 'CS') {
-    overlayContext.translate(event.x, event.y)
-    overlayContext.rotate(event.angle-(Math.PI/2));
+  if (event.detection === 'CS') {
+    overlayContext.translate(event.x, event.y);
+    overlayContext.rotate(event.angle - (Math.PI / 2));
     overlayContext.strokeStyle = '#00CC00';
-    overlayContext.strokeRect((-(event.width/2)) >> 0,
-      (-(event.height/2)) >> 0, event.width, event.height);
-    overlayContext.rotate((Math.PI/2) - event.angle);
+    overlayContext.strokeRect((-(event.width / 2)) >> 0,
+        (-(event.height / 2)) >> 0, event.width, event.height);
+    overlayContext.rotate((Math.PI / 2) - event.angle);
     overlayContext.translate(-event.x, -event.y);
   }
 }
 
+var n = 0;
 // requires headPosition : true in Tracker constructor
-function handleHeadTrackingEvent(e){
-  console.log('headtrackingEvent: ', e.x, e.y, e.z);
+function handleHeadTrackingEvent(e) {
+  console.log('headtrackingEvent: ', n, e.x, e.y, e.z);
+  ++n;
 }
 
 var htracker = new headtrackr.Tracker({
-  calcAngles : true,
-  ui : false,
-  headPosition : true // whether to calculate the head position
+  calcAngles: true,
+  ui: false,
+  headPosition: true // whether to calculate the head position
 });
 document.addEventListener('facetrackingEvent', handleFaceTrackingEvent);
 // requires headPosition : true in Tracker constructor
 document.addEventListener('headtrackingEvent', handleHeadTrackingEvent);
-document.addEventListener('headtrackrStatus', handleheadtrackrStatusEvent, true);
+document.addEventListener('headtrackrStatus', handleheadtrackrStatusEvent,
+    true);
 htracker.init(videoInput, canvasInput);
 htracker.start();

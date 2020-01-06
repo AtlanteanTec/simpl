@@ -1,23 +1,41 @@
-navigator.getUserMedia = navigator.getUserMedia || navigator.webkitGetUserMedia ||
-    navigator.mozGetUserMedia || navigator.msGetUserMedia;
+/*
+Copyright 2017 Google Inc.
 
-var stream;
-var n = navigator.getUserMedia({audio: true}, function(localMediaStream) {
-  window.stream = localMediaStream;
-  var audioElement = document.querySelector("audio");
+Licensed under the Apache License, Version 2.0 (the "License");
+you may not use this file except in compliance with the License.
+You may obtain a copy of the License at
+
+    http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+limitations under the License.
+*/
+
+'use strict';
+
+navigator.getUserMedia = navigator.getUserMedia ||
+navigator.webkitGetUserMedia || navigator.mozGetUserMedia;
+
+var n = navigator.getUserMedia({
+  audio: true
+}, function(mediaStream) {
+  var stream = mediaStream;
+  var audioElement = document.querySelector('audio');
   try {
-    audioElement.src = window.URL.createObjectURL(localMediaStream);
-  } catch(e) {
+    audioElement.src = window.URL.createObjectURL(stream);
+  } catch (event0) {
     try {
-      audioElement.mozSrcObject = localMediaStream;
+      audioElement.mozSrcObject = stream;
       audioElement.play();
-    } catch(e){
-      console.log("Error setting video src: ", e);
+    } catch (event1) {
+      console.log('Error setting video src: ', event1);
     }
   }
 }, function(error) {
-  console.log("navigator.getUserMedia error: ", error);
+  console.log('navigator.getUserMedia error: ', error);
 });
 
 console.log(n);
-
